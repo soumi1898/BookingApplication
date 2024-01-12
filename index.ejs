@@ -1,0 +1,78 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Application</title>
+</head>
+<body>
+  <h1>Booking Form</h1>
+  <form id="userForm" action="/addUser" method="post">
+    <!-- Input fields for adding a new user -->
+    <label for="userName">Username:</label>
+    <input type="text" id="userName" name="userName" required>
+
+    <label for="emailId">Email:</label>
+    <input type="email" id="emailId" name="emailId" required>
+
+    <label for="phoneNumber">Phone Number:</label>
+    <input type="tel" id="phoneNumber" name="phoneNumber" required>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- Conditionally render the user list if there are users -->
+  <% if (users.length > 0) { %>
+    <h2>User List</h2>
+    <ul id="userList">
+      <!-- User list will be dynamically generated here -->
+      <% for (const user of users) { %>
+        <li>
+          <%= user.userName %> - <%= user.emailId %> - <%= user.phoneNumber %>
+          <!-- Edit button with onclick event to populate the form -->
+          <button onclick="editUser('<%= user.id %>', '<%= user.userName %>', '<%= user.emailId %>', '<%= user.phoneNumber %>')">Edit</button>
+          <!-- Delete button with onclick event to remove from list and database -->
+          <button onclick="deleteUser('<%= user.id %>')" id="delete-btn">Delete</button>
+        </li>
+      <% } %>
+    </ul>
+  <% } else { %>
+    <!-- Display a message when there are no users -->
+    <p>No users in the database.</p>
+  <% } %>
+
+  <script>
+    // Function to populate the form when clicking the Edit button
+    function editUser(id, userName, emailId, phoneNumber) {
+      document.getElementById('userName').value = userName;
+      document.getElementById('emailId').value = emailId;
+      document.getElementById('phoneNumber').value = phoneNumber;
+
+      // Update form action for editing
+      document.getElementById('userForm').action = `/editUser/${id}`;
+    }
+
+    // Function to delete user from the list and the database
+    function deleteUser(id) {
+    //   const confirmed = confirm('Are you sure you want to delete this user?');
+    //   if (confirmed) {
+        // Remove the user from the displayed list
+        // const listItem = document.querySelector(li[`data-user-id=${id}`]);
+        // if (listItem) {
+        //   listItem.remove();
+        // }
+
+        console.log("in delete");
+        // Create a form dynamically and submit it
+        const form = document.createElement('form');
+                form.method = 'GET';
+                form.action = `/deleteUser/${id}`;
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+    // }
+  </script>
+</body>
+</html>
